@@ -1,43 +1,46 @@
 import joblib
+
 from sklearn.datasets import load_iris
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
 
+# Load dataset
+iris = load_iris()
 
-def load_data():
-    iris = load_iris()
-    return train_test_split(
-        iris.data, iris.target, test_size=0.2, random_state=42
-    )
+X = iris.data
+y = iris.target
 
+# Split dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X,
+    y,
+    test_size=0.2,
+    random_state=42
+)
 
-def train_model(X_train, y_train, n_estimators=100, max_depth=None):
-    model = RandomForestClassifier(
-        n_estimators=n_estimators, max_depth=max_depth, random_state=42
-    )
-    model.fit(X_train, y_train)
-    return model
+# Create model
+model = RandomForestClassifier(
+    n_estimators=100,
+    random_state=42
+)
 
+# Train model
+model.fit(X_train, y_train)
 
-def evaluate_model(model, X_test, y_test):
-    predictions = model.predict(X_test)
-    acc = accuracy_score(y_test, predictions)
-    report = classification_report(y_test, predictions)
-    return acc, report
+# Make predictions
+predictions = model.predict(X_test)
 
+# Calculate accuracy
+accuracy = accuracy_score(y_test, predictions)
 
-def main():
-    X_train, X_test, y_train, y_test = load_data()
-    model = train_model(X_train, y_train)
-    acc, report = evaluate_model(model, X_test, y_test)
+print("Accuracy:", accuracy)
 
-    print(f"Accuracy: {acc:.4f}")
-    print(report)
+# Classification report
+print("\nClassification Report:")
+print(classification_report(y_test, predictions))
 
-    joblib.dump(model, "models/iris_model.joblib")
-    print("Model saved to models/iris_model.joblib")
+# Save model
+joblib.dump(model, "iris_model.joblib")
 
-
-if __name__ == "__main__":
-    main()
+print("\nModel saved successfully!")
