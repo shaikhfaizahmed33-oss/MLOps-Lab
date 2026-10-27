@@ -42,6 +42,8 @@ def preprocess(input_path: str, output_path: str) -> pd.DataFrame:
             )
 
     df = df.dropna(subset=["species"])
+    
+    # Remove the collection timestamp because it isn't a model feature.
     df = df.drop(columns=["collected_at"], errors="ignore")
 
     Path(output_path).parent.mkdir(
